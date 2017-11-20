@@ -1,85 +1,85 @@
 __precompile__(true)
-module Missings
+module Mehs
 
 import Base: *, <, ==, !=, <=, !, +, -, ^, /, &, |, xor
 using Compat: AbstractRange
 
-export ismissing, missing, missings, Missing, MissingException, levels
+export ismeh, meh, mehs, Meh, MehException, levels
 
 """
-    Missing
+    Meh
 
-A type with no fields whose singleton instance [`missing`](@ref) is used
-to represent missing values.
+A type with no fields whose singleton instance [`meh`](@ref) is used
+to represent meh values.
 """
-struct Missing end
-
-"""
-    missing
-
-The singleton instance of type [`Missing`](@ref) representing a missing value.
-"""
-const missing = Missing()
-
-Base.show(io::IO, x::Missing) = print(io, "missing")
+struct Meh end
 
 """
-    MissingException(msg)
+    meh
 
-Exception thrown when a [`missing`](@ref) value is encountered in a situation
+The singleton instance of type [`Meh`](@ref) representing a meh value.
+"""
+const meh = Meh()
+
+Base.show(io::IO, x::Meh) = print(io, "meh")
+
+"""
+    MehException(msg)
+
+Exception thrown when a [`meh`](@ref) value is encountered in a situation
 where it is not supported. The error message, in the `msg` field
 may provide more specific details.
 """
-struct MissingException <: Exception
+struct MehException <: Exception
     msg::AbstractString
 end
 
-Base.showerror(io::IO, ex::MissingException) =
-    print(io, "MissingException: ", ex.msg)
+Base.showerror(io::IO, ex::MehException) =
+    print(io, "MehException: ", ex.msg)
 
-T(::Type{Union{T1, Missing}}) where {T1} = T1
-T(::Type{Missing}) = Union{}
+T(::Type{Union{T1, Meh}}) where {T1} = T1
+T(::Type{Meh}) = Union{}
 T(::Type{T1}) where {T1} = T1
 T(::Type{Any}) = Any
 
-ismissing(::Any) = false
-ismissing(::Missing) = true
+ismeh(::Any) = false
+ismeh(::Meh) = true
 
 # vector constructors
-missings(dims...) = fill(missing, dims)
-missings(::Type{T}, dims...) where {T >: Missing} = fill!(Array{T}(dims), missing)
-missings(::Type{T}, dims...) where {T} = fill!(Array{Union{T, Missing}}(dims), missing)
+mehs(dims...) = fill(meh, dims)
+mehs(::Type{T}, dims...) where {T >: Meh} = fill!(Array{T}(dims), meh)
+mehs(::Type{T}, dims...) where {T} = fill!(Array{Union{T, Meh}}(dims), meh)
 
-Base.promote_rule(::Type{T}, ::Type{Missing}) where {T} = Union{T, Missing}
-Base.promote_rule(::Type{T}, ::Type{Union{S,Missing}}) where {T,S} = Union{promote_type(T, S), Missing}
+Base.promote_rule(::Type{T}, ::Type{Meh}) where {T} = Union{T, Meh}
+Base.promote_rule(::Type{T}, ::Type{Union{S,Meh}}) where {T,S} = Union{promote_type(T, S), Meh}
 Base.promote_rule(::Type{T}, ::Type{Any}) where {T} = Any
-Base.promote_rule(::Type{Any}, ::Type{Missing}) = Any
-Base.promote_rule(::Type{Missing}, ::Type{Any}) = Any
-Base.promote_rule(::Type{Missing}, ::Type{Missing}) = Missing
+Base.promote_rule(::Type{Any}, ::Type{Meh}) = Any
+Base.promote_rule(::Type{Meh}, ::Type{Any}) = Any
+Base.promote_rule(::Type{Meh}, ::Type{Meh}) = Meh
 
-Base.convert(::Type{Union{T, Missing}}, x) where {T} = convert(T, x)
+Base.convert(::Type{Union{T, Meh}}, x) where {T} = convert(T, x)
 
 # Comparison operators
-==(::Missing, ::Missing) = missing
-==(::Missing, b) = missing
-==(a, ::Missing) = missing
+==(::Meh, ::Meh) = meh
+==(::Meh, b) = meh
+==(a, ::Meh) = meh
 # != must be defined explicitly since fallback expects a Bool
-!=(::Missing, ::Missing) = missing
-!=(::Missing, b) = missing
-!=(a, ::Missing) = missing
-Base.isequal(::Missing, ::Missing) = true
-Base.isequal(::Missing, b) = false
-Base.isequal(a, ::Missing) = false
-<(::Missing, ::Missing) = missing
-<(::Missing, b) = missing
-<(a, ::Missing) = missing
-Base.isless(::Missing, ::Missing) = false
-Base.isless(::Missing, b) = false
-Base.isless(a, ::Missing) = true
+!=(::Meh, ::Meh) = meh
+!=(::Meh, b) = meh
+!=(a, ::Meh) = meh
+Base.isequal(::Meh, ::Meh) = true
+Base.isequal(::Meh, b) = false
+Base.isequal(a, ::Meh) = false
+<(::Meh, ::Meh) = meh
+<(::Meh, b) = meh
+<(a, ::Meh) = meh
+Base.isless(::Meh, ::Meh) = false
+Base.isless(::Meh, b) = false
+Base.isless(a, ::Meh) = true
 if VERSION < v"0.7.0-DEV.300"
-    <=(::Missing, ::Missing) = missing
-    <=(::Missing, b) = missing
-    <=(a, ::Missing) = missing
+    <=(::Meh, ::Meh) = meh
+    <=(::Meh, b) = meh
+    <=(a, ::Meh) = meh
 end
 
 # Unary operators/functions
@@ -92,251 +92,251 @@ for f in (:(!), :(+), :(-), :(Base.identity), :(Base.zero),
           :(Base.iseven), :(Base.ispow2), :(Base.isfinite), :(Base.isinf), :(Base.isodd),
           :(Base.isinteger), :(Base.isreal), :(Base.isimag), :(Base.isnan), :(Base.isempty),
           :(Base.iszero), :(Base.transpose), :(Base.ctranspose), :(Base.float))
-    @eval $(f)(d::Missing) = missing
+    @eval $(f)(d::Meh) = meh
 end
 
-Base.zero(::Type{Union{T, Missing}}) where {T <: Number} = zero(T)
-Base.zero(::Type{Union{T, Missing}}) where {T <: Base.Dates.Period} = zero(T)
+Base.zero(::Type{Union{T, Meh}}) where {T <: Number} = zero(T)
+Base.zero(::Type{Union{T, Meh}}) where {T <: Base.Dates.Period} = zero(T)
 
 # Binary operators/functions
 for f in (:(+), :(-), :(*), :(/), :(^),
           :(Base.div), :(Base.mod), :(Base.fld), :(Base.rem), :(Base.min), :(Base.max))
     @eval begin
-        # Scalar with missing
-        ($f)(::Missing, ::Missing) = missing
-        ($f)(d::Missing, x::Number) = missing
-        ($f)(d::Number, x::Missing) = missing
+        # Scalar with meh
+        ($f)(::Meh, ::Meh) = meh
+        ($f)(d::Meh, x::Number) = meh
+        ($f)(d::Number, x::Meh) = meh
     end
 end
 
 # Rounding and related functions
 for f in (:(Base.ceil), :(Base.floor), :(Base.round), :(Base.trunc))
     @eval begin
-        ($f)(::Missing, digits::Integer=0, base::Integer=0) = missing
-        ($f)(::Type{>:Missing}, ::Missing) = missing
-        ($f)(::Type{T}, ::Missing) where {T} =
-            throw(MissingException("cannot convert a missing value to type $T"))
+        ($f)(::Meh, digits::Integer=0, base::Integer=0) = meh
+        ($f)(::Type{>:Meh}, ::Meh) = meh
+        ($f)(::Type{T}, ::Meh) where {T} =
+            throw(MehException("cannot convert a meh value to type $T"))
     end
 end
 
 # to avoid ambiguity warnings
-(^)(::Missing, ::Integer) = missing
+(^)(::Meh, ::Integer) = meh
 
 # Bit operators
-(&)(::Missing, ::Missing) = missing
-(&)(a::Missing, b::Bool) = ifelse(b, missing, false)
-(&)(b::Bool, a::Missing) = ifelse(b, missing, false)
-(&)(::Missing, ::Integer) = missing
-(&)(::Integer, ::Missing) = missing
-(|)(::Missing, ::Missing) = missing
-(|)(a::Missing, b::Bool) = ifelse(b, true, missing)
-(|)(b::Bool, a::Missing) = ifelse(b, true, missing)
-(|)(::Missing, ::Integer) = missing
-(|)(::Integer, ::Missing) = missing
-xor(::Missing, ::Missing) = missing
-xor(a::Missing, b::Bool) = missing
-xor(b::Bool, a::Missing) = missing
-xor(::Missing, ::Integer) = missing
-xor(::Integer, ::Missing) = missing
+(&)(::Meh, ::Meh) = meh
+(&)(a::Meh, b::Bool) = ifelse(b, meh, false)
+(&)(b::Bool, a::Meh) = ifelse(b, meh, false)
+(&)(::Meh, ::Integer) = meh
+(&)(::Integer, ::Meh) = meh
+(|)(::Meh, ::Meh) = meh
+(|)(a::Meh, b::Bool) = ifelse(b, true, meh)
+(|)(b::Bool, a::Meh) = ifelse(b, true, meh)
+(|)(::Meh, ::Integer) = meh
+(|)(::Integer, ::Meh) = meh
+xor(::Meh, ::Meh) = meh
+xor(a::Meh, b::Bool) = meh
+xor(b::Bool, a::Meh) = meh
+xor(::Meh, ::Integer) = meh
+xor(::Integer, ::Meh) = meh
 
 # String functions
-*(d::Missing, x::AbstractString) = missing
-*(d::AbstractString, x::Missing) = missing
+*(d::Meh, x::AbstractString) = meh
+*(d::AbstractString, x::Meh) = meh
 
 # Iterators
 """
-    Missings.replace(itr, replacement)
+    Mehs.replace(itr, replacement)
 
-Return an iterator wrapping iterable `itr` which replaces [`missing`](@ref) values with
+Return an iterator wrapping iterable `itr` which replaces [`meh`](@ref) values with
 `replacement`. When applicable, the size of `itr` is preserved.
 If the type of `replacement` differs from the element type of `itr`,
 it will be converted.
 
-See also: [`Missings.skip`](@ref), [`Missings.fail`](@ref)
+See also: [`Mehs.skip`](@ref), [`Mehs.fail`](@ref)
 
 # Examples
 ```jldoctest
-julia> collect(Missings.replace([1, missing, 2], 0))
+julia> collect(Mehs.replace([1, meh, 2], 0))
 3-element Array{Int64,1}:
  1
  0
  2
 
-julia> collect(Missings.replace([1 missing; 2 missing], 0))
+julia> collect(Mehs.replace([1 meh; 2 meh], 0))
 2×2 Array{Int64,2}:
  1  0
  2  0
 
 ```
 """
-replace(itr, replacement) = EachReplaceMissing(itr, convert(eltype(itr), replacement))
-struct EachReplaceMissing{T, U}
+replace(itr, replacement) = EachReplaceMeh(itr, convert(eltype(itr), replacement))
+struct EachReplaceMeh{T, U}
     x::T
     replacement::U
 end
-Base.iteratorsize(::Type{<:EachReplaceMissing{T}}) where {T} =
+Base.iteratorsize(::Type{<:EachReplaceMeh{T}}) where {T} =
     Base.iteratorsize(T)
-Base.iteratoreltype(::Type{<:EachReplaceMissing{T}}) where {T} =
+Base.iteratoreltype(::Type{<:EachReplaceMeh{T}}) where {T} =
     Base.iteratoreltype(T)
-Base.length(itr::EachReplaceMissing) = length(itr.x)
-Base.size(itr::EachReplaceMissing) = size(itr.x)
-Base.start(itr::EachReplaceMissing) = start(itr.x)
-Base.done(itr::EachReplaceMissing, state) = done(itr.x, state)
-Base.eltype(itr::EachReplaceMissing) = Missings.T(eltype(itr.x))
-@inline function Base.next(itr::EachReplaceMissing, state)
+Base.length(itr::EachReplaceMeh) = length(itr.x)
+Base.size(itr::EachReplaceMeh) = size(itr.x)
+Base.start(itr::EachReplaceMeh) = start(itr.x)
+Base.done(itr::EachReplaceMeh, state) = done(itr.x, state)
+Base.eltype(itr::EachReplaceMeh) = Mehs.T(eltype(itr.x))
+@inline function Base.next(itr::EachReplaceMeh, state)
     v, s = next(itr.x, state)
-    (v isa Missing ? itr.replacement : v, s)
+    (v isa Meh ? itr.replacement : v, s)
 end
 
 """
-    Missings.skip(itr)
+    Mehs.skip(itr)
 
-Return an iterator wrapping iterable `itr` which skips [`missing`](@ref) values.
+Return an iterator wrapping iterable `itr` which skips [`meh`](@ref) values.
 
-Use [`collect`](@ref) to obtain an `Array` containing the non-`missing` values in
+Use [`collect`](@ref) to obtain an `Array` containing the non-`meh` values in
 `itr`. Note that even if `itr` is a multidimensional array, the result will always
-be a `Vector` since it is not possible to remove missings while preserving dimensions
+be a `Vector` since it is not possible to remove mehs while preserving dimensions
 of the input.
 
-See also: [`Missings.replace`](@ref), [`Missings.fail`](@ref)
+See also: [`Mehs.replace`](@ref), [`Mehs.fail`](@ref)
 
 # Examples
 ```jldoctest
-julia> collect(Missings.skip([1, missing, 2]))
+julia> collect(Mehs.skip([1, meh, 2]))
 2-element Array{Int64,1}:
  1
  2
 
-julia> collect(Missings.skip([1 missing; 2 missing]))
+julia> collect(Mehs.skip([1 meh; 2 meh]))
 2-element Array{Int64,1}:
  1
  2
 
 ```
 """
-skip(itr) = EachSkipMissing(itr)
-struct EachSkipMissing{T}
+skip(itr) = EachSkipMeh(itr)
+struct EachSkipMeh{T}
     x::T
 end
-Base.iteratorsize(::Type{<:EachSkipMissing}) =
+Base.iteratorsize(::Type{<:EachSkipMeh}) =
     Base.SizeUnknown()
-Base.iteratoreltype(::Type{EachSkipMissing{T}}) where {T} =
+Base.iteratoreltype(::Type{EachSkipMeh{T}}) where {T} =
     Base.iteratoreltype(T)
-Base.eltype(itr::EachSkipMissing) = Missings.T(eltype(itr.x))
+Base.eltype(itr::EachSkipMeh) = Mehs.T(eltype(itr.x))
 # Fallback implementation for general iterables: we cannot access a value twice,
-# so after finding the next non-missing element in start() or next(), we have to
+# so after finding the next non-meh element in start() or next(), we have to
 # pass it in the iterator state, which introduces a type instability since the value
-# is missing if the input does not contain any non-missing element.
+# is meh if the input does not contain any non-meh element.
 # As of Julia 0.6 and early 0.7, this instability kills performance.
-@inline function Base.start(itr::EachSkipMissing)
+@inline function Base.start(itr::EachSkipMeh)
     s = start(itr.x)
-    v = missing
-    @inbounds while !done(itr.x, s) && v isa Missing
+    v = meh
+    @inbounds while !done(itr.x, s) && v isa Meh
         v, s = next(itr.x, s)
     end
     (v, s)
 end
-@inline Base.done(itr::EachSkipMissing, state) = ismissing(state[1]) && done(itr.x, state[2])
-@inline function Base.next(itr::EachSkipMissing, state)
+@inline Base.done(itr::EachSkipMeh, state) = ismeh(state[1]) && done(itr.x, state[2])
+@inline function Base.next(itr::EachSkipMeh, state)
     v1, s = state
-    v2 = missing
-    @inbounds while !done(itr.x, s) && v2 isa Missing
+    v2 = meh
+    @inbounds while !done(itr.x, s) && v2 isa Meh
         v2, s = next(itr.x, s)
     end
     (v1, (v2, s))
 end
 # Optimized implementation for AbstractArray, relying on the ability to access x[i] twice:
-# once in done() to find the next non-missing entry, and once in next() to return it.
+# once in done() to find the next non-meh entry, and once in next() to return it.
 # This works around the type instability problem of the generic fallback.
-@inline function _next_nonmissing_ind(x::AbstractArray, s)
+@inline function _next_nonmeh_ind(x::AbstractArray, s)
     idx = eachindex(x)
     @inbounds while !done(idx, s)
         i, new_s = next(idx, s)
-        x[i] isa Missing || break
+        x[i] isa Meh || break
         s = new_s
     end
     s
 end
-@inline Base.start(itr::EachSkipMissing{<:AbstractArray}) =
-    _next_nonmissing_ind(itr.x, start(eachindex(itr.x)))
-@inline Base.done(itr::EachSkipMissing{<:AbstractArray}, state) =
+@inline Base.start(itr::EachSkipMeh{<:AbstractArray}) =
+    _next_nonmeh_ind(itr.x, start(eachindex(itr.x)))
+@inline Base.done(itr::EachSkipMeh{<:AbstractArray}, state) =
     done(eachindex(itr.x), state)
-@inline function Base.next(itr::EachSkipMissing{<:AbstractArray}, state)
+@inline function Base.next(itr::EachSkipMeh{<:AbstractArray}, state)
     i, state = next(eachindex(itr.x), state)
     @inbounds v = itr.x[i]::eltype(itr)
-    (v, _next_nonmissing_ind(itr.x, state))
+    (v, _next_nonmeh_ind(itr.x, state))
 end
 
 """
-    Missings.fail(itr)
+    Mehs.fail(itr)
 
-Return an iterator wrapping iterable `itr` which will throw a [`MissingException`](@ref)
-if a [`missing`](@ref) value is found.
+Return an iterator wrapping iterable `itr` which will throw a [`MehException`](@ref)
+if a [`meh`](@ref) value is found.
 
 Use [`collect`](@ref) to obtain an `Array` containing the resulting values.
 If `itr` is an array, the resulting array will have the same dimensions.
 
-See also: [`Missings.skip`](@ref), [`Missings.replace`](@ref)
+See also: [`Mehs.skip`](@ref), [`Mehs.replace`](@ref)
 
 # Examples
 ```jldoctest
-julia> collect(Missings.fail([1 2; 3 4]))
+julia> collect(Mehs.fail([1 2; 3 4]))
 2×2 Array{Int64,2}:
  1  2
  3  4
 
-julia> collect(Missings.fail([1, missing, 2]))
-ERROR: MissingException: missing value encountered by Missings.fail
+julia> collect(Mehs.fail([1, meh, 2]))
+ERROR: MehException: meh value encountered by Mehs.fail
 [...]
 ```
 """
-fail(itr) = EachFailMissing(itr)
-struct EachFailMissing{T}
+fail(itr) = EachFailMeh(itr)
+struct EachFailMeh{T}
     x::T
 end
-Base.iteratorsize(::Type{EachFailMissing{T}}) where {T} =
+Base.iteratorsize(::Type{EachFailMeh{T}}) where {T} =
     Base.iteratorsize(T)
-Base.iteratoreltype(::Type{EachFailMissing{T}}) where {T} =
+Base.iteratoreltype(::Type{EachFailMeh{T}}) where {T} =
     Base.iteratoreltype(T)
-Base.length(itr::EachFailMissing) = length(itr.x)
-Base.size(itr::EachFailMissing) = size(itr.x)
-Base.start(itr::EachFailMissing) = start(itr.x)
-Base.done(itr::EachFailMissing, state) = done(itr.x, state)
-Base.eltype(itr::EachFailMissing) = Missings.T(eltype(itr.x))
-@inline function Base.next(itr::EachFailMissing, state)
+Base.length(itr::EachFailMeh) = length(itr.x)
+Base.size(itr::EachFailMeh) = size(itr.x)
+Base.start(itr::EachFailMeh) = start(itr.x)
+Base.done(itr::EachFailMeh, state) = done(itr.x, state)
+Base.eltype(itr::EachFailMeh) = Mehs.T(eltype(itr.x))
+@inline function Base.next(itr::EachFailMeh, state)
     v, s = next(itr.x, state)
-    # NOTE: v isa Missing currently gives incorrect code, cf. JuliaLang/julia#24177
-    ismissing(v) && throw(MissingException("missing value encountered by Missings.fail"))
+    # NOTE: v isa Meh currently gives incorrect code, cf. JuliaLang/julia#24177
+    ismeh(v) && throw(MehException("meh value encountered by Mehs.fail"))
     (v::eltype(itr), s)
 end
 
 """
     coalesce(x, y...)
 
-Return the first non-`missing` value in the arguments, or `missing` if all arguments are `missing`.
+Return the first non-`meh` value in the arguments, or `meh` if all arguments are `meh`.
 
-In its broadcasted form, this function can be used to replace all missing values
+In its broadcasted form, this function can be used to replace all meh values
 in an array with a given value (see examples).
 
 # Examples
 
 ```jldoctest
-julia> coalesce(missing, 1)
+julia> coalesce(meh, 1)
 1
 
-julia> coalesce(1, missing)
+julia> coalesce(1, meh)
 1
 
-julia> coalesce(missing, missing)
-missing
+julia> coalesce(meh, meh)
+meh
 
-julia> coalesce.([missing, 1, missing], 0)
+julia> coalesce.([meh, 1, meh], 0)
 3-element Array{$Int,1}:
  0
  1
  0
 
-julia> coalesce.([missing, 1, missing], [0, 10, 5])
+julia> coalesce.([meh, 1, meh], [0, 10, 5])
 3-element Array{$Int,1}:
  0
  1
@@ -345,86 +345,86 @@ julia> coalesce.([missing, 1, missing], [0, 10, 5])
 ```
 """
 coalesce(x) = x
-coalesce(x, y...) = ifelse(x !== missing, x, coalesce(y...))
+coalesce(x, y...) = ifelse(x !== meh, x, coalesce(y...))
 
 """
     levels(x)
 
 Return a vector of unique values which occur or could occur in collection `x`,
-omitting `missing` even if present. Values are returned in the preferred order
+omitting `meh` even if present. Values are returned in the preferred order
 for the collection, with the result of [`sort`](@ref) as a default.
 
 Contrary to [`unique`](@ref), this function may return values which do not
 actually occur in the data, and does not preserve their order of appearance in `x`.
 """
 function levels(x)
-    T = Missings.T(eltype(x))
-    levs = convert(AbstractArray{T}, filter!(!ismissing, unique(x)))
+    T = Mehs.T(eltype(x))
+    levs = convert(AbstractArray{T}, filter!(!ismeh, unique(x)))
     if method_exists(isless, Tuple{T, T})
         try; sort!(levs); end
     end
     levs
 end
 
-# AbstractArray{>:Missing} functions
+# AbstractArray{>:Meh} functions
 
-function ==(A::AbstractArray{>:Missing}, B::AbstractArray)
+function ==(A::AbstractArray{>:Meh}, B::AbstractArray)
     if indices(A) != indices(B)
         return false
     end
     if isa(A,AbstractRange) != isa(B,AbstractRange)
         return false
     end
-    anymissing = false
+    anymeh = false
     @inbounds for (a, b) in zip(A, B)
         eq = (a == b)
         if eq === false
             return false
         else
-            anymissing |= ismissing(eq)
+            anymeh |= ismeh(eq)
         end
     end
-    return anymissing ? missing : true
+    return anymeh ? meh : true
 end
 
-==(A::AbstractArray, B::AbstractArray{>:Missing}) = (B == A)
-==(A::AbstractArray{>:Missing}, B::AbstractArray{>:Missing}) =
-    invoke(==, Tuple{AbstractArray{>:Missing}, AbstractArray}, A, B)
+==(A::AbstractArray, B::AbstractArray{>:Meh}) = (B == A)
+==(A::AbstractArray{>:Meh}, B::AbstractArray{>:Meh}) =
+    invoke(==, Tuple{AbstractArray{>:Meh}, AbstractArray}, A, B)
 
-!=(x::AbstractArray{>:Missing}, y::AbstractArray) = !(x == y)
-!=(x::AbstractArray, y::AbstractArray{>:Missing}) = !(x == y)
-!=(x::AbstractArray{>:Missing}, y::AbstractArray{>:Missing}) = !(x == y)
+!=(x::AbstractArray{>:Meh}, y::AbstractArray) = !(x == y)
+!=(x::AbstractArray, y::AbstractArray{>:Meh}) = !(x == y)
+!=(x::AbstractArray{>:Meh}, y::AbstractArray{>:Meh}) = !(x == y)
 
-function Base.any(f, A::AbstractArray{>:Missing})
-    anymissing = false
+function Base.any(f, A::AbstractArray{>:Meh})
+    anymeh = false
     @inbounds for x in A
         v = f(x)
         if v === true
             return true
         else
-            anymissing |= ismissing(v)
+            anymeh |= ismeh(v)
         end
     end
-    return anymissing ? missing : false
+    return anymeh ? meh : false
 end
 
-function Base.all(f, A::AbstractArray{>:Missing})
-    anymissing = false
+function Base.all(f, A::AbstractArray{>:Meh})
+    anymeh = false
     @inbounds for x in A
         v = f(x)
         if v === false
             return false
         else
-            anymissing |= ismissing(v)
+            anymeh |= ismeh(v)
         end
     end
-    return anymissing ? missing : true
+    return anymeh ? meh : true
 end
 
-function Base.float(A::AbstractArray{Union{T, Missing}}) where {T}
+function Base.float(A::AbstractArray{Union{T, Meh}}) where {T}
     U = typeof(float(zero(T)))
-    convert(AbstractArray{Union{U, Missing}}, A)
+    convert(AbstractArray{Union{U, Meh}}, A)
 end
-Base.float(A::AbstractArray{Missing}) = A
+Base.float(A::AbstractArray{Meh}) = A
 
 end # module

@@ -1,23 +1,23 @@
-using Base.Test, Missings
+using Base.Test, Mehs
 
-@testset "Missings" begin
+@testset "Mehs" begin
     # test promote rules
-    @test promote_type(Missing, Missing) == Missing
-    @test promote_type(Missing, Int) == Union{Missing, Int}
-    @test promote_type(Int, Missing) == Union{Missing, Int}
+    @test promote_type(Meh, Meh) == Meh
+    @test promote_type(Meh, Int) == Union{Meh, Int}
+    @test promote_type(Int, Meh) == Union{Meh, Int}
     @test promote_type(Int, Any) == Any
     @test promote_type(Any, Any) == Any
-    @test promote_type(Missing, Any) == Any
-    @test promote_type(Any, Missing) == Any
-    @test promote_type(Union{Int, Missing}, Missing) == Union{Int, Missing}
-    @test promote_type(Missing, Union{Int, Missing}) == Union{Int, Missing}
-    @test promote_type(Union{Int, Missing}, Int) == Union{Int, Missing}
-    @test promote_type(Int, Union{Int, Missing}) == Union{Int, Missing}
-    @test promote_type(Any, Union{Int, Missing}) == Any
-    @test promote_type(Union{Int, Missing}, Union{Int, Missing}) == Union{Int, Missing}
-    @test promote_type(Union{Float64, Missing}, Union{String, Missing}) == Any
-    @test promote_type(Union{Float64, Missing}, Union{Int, Missing}) == Union{Float64, Missing}
-    @test promote_type(Union{Void, Missing, Int}, Float64) == Any
+    @test promote_type(Meh, Any) == Any
+    @test promote_type(Any, Meh) == Any
+    @test promote_type(Union{Int, Meh}, Meh) == Union{Int, Meh}
+    @test promote_type(Meh, Union{Int, Meh}) == Union{Int, Meh}
+    @test promote_type(Union{Int, Meh}, Int) == Union{Int, Meh}
+    @test promote_type(Int, Union{Int, Meh}) == Union{Int, Meh}
+    @test promote_type(Any, Union{Int, Meh}) == Any
+    @test promote_type(Union{Int, Meh}, Union{Int, Meh}) == Union{Int, Meh}
+    @test promote_type(Union{Float64, Meh}, Union{String, Meh}) == Any
+    @test promote_type(Union{Float64, Meh}, Union{Int, Meh}) == Union{Float64, Meh}
+    @test promote_type(Union{Void, Meh, Int}, Float64) == Any
 
     bit_operators = [&, |, ⊻]
 
@@ -36,269 +36,269 @@ using Base.Test, Missings
 
     rounding_functions = [ceil, floor, round, trunc]
 
-    # All unary operators return missing when evaluating missing
+    # All unary operators return meh when evaluating meh
     for f in [!, +, -]
-        @test ismissing(f(missing))
+        @test ismeh(f(meh))
     end
 
-    # All elementary functions return missing when evaluating missing
+    # All elementary functions return meh when evaluating meh
     for f in elementary_functions
-        @test ismissing(f(missing))
+        @test ismeh(f(meh))
     end
 
-    # All rounding functions return missing when evaluating missing as first argument
+    # All rounding functions return meh when evaluating meh as first argument
     for f in rounding_functions
-        @test ismissing(f(missing))
-        @test ismissing(f(missing, 1))
-        @test ismissing(f(missing, 1, 1))
-        @test ismissing(f(Union{Int, Missing}, missing))
-        @test_throws MissingException f(Int, missing)
+        @test ismeh(f(meh))
+        @test ismeh(f(meh, 1))
+        @test ismeh(f(meh, 1, 1))
+        @test ismeh(f(Union{Int, Meh}, meh))
+        @test_throws MehException f(Int, meh)
     end
 
-    @test zero(Union{Int, Missing}) === 0
-    @test zero(Union{Float64, Missing}) === 0.0
+    @test zero(Union{Int, Meh}) === 0
+    @test zero(Union{Float64, Meh}) === 0.0
 
     for T in (subtypes(Dates.DatePeriod)...,
               subtypes(Dates.TimePeriod)...)
-        @test zero(Union{T, Missing}) === T(0)
+        @test zero(Union{T, Meh}) === T(0)
     end
 
     # Comparison operators
-    @test (missing == missing) === missing
-    @test (1 == missing) === missing
-    @test (missing == 1) === missing
-    @test (missing != missing) === missing
-    @test (1 != missing) === missing
-    @test (missing != 1) === missing
-    @test isequal(missing, missing)
-    @test !isequal(1, missing)
-    @test !isequal(missing, 1)
-    @test (missing < missing) === missing
-    @test (missing < 1) === missing
-    @test (1 < missing) === missing
-    @test (missing <= missing) === missing
-    @test (missing <= 1) === missing
-    @test (1 <= missing) === missing
-    @test !isless(missing, missing)
-    @test !isless(missing, 1)
-    @test isless(1, missing)
+    @test (meh == meh) === meh
+    @test (1 == meh) === meh
+    @test (meh == 1) === meh
+    @test (meh != meh) === meh
+    @test (1 != meh) === meh
+    @test (meh != 1) === meh
+    @test isequal(meh, meh)
+    @test !isequal(1, meh)
+    @test !isequal(meh, 1)
+    @test (meh < meh) === meh
+    @test (meh < 1) === meh
+    @test (1 < meh) === meh
+    @test (meh <= meh) === meh
+    @test (meh <= 1) === meh
+    @test (1 <= meh) === meh
+    @test !isless(meh, meh)
+    @test !isless(meh, 1)
+    @test isless(1, meh)
 
-    # All arithmetic operators return missing when operating on two missing's
-    # All arithmetic operators return missing when operating on a scalar and an missing
-    # All arithmetic operators return missing when operating on an missing and a scalar
+    # All arithmetic operators return meh when operating on two meh's
+    # All arithmetic operators return meh when operating on a scalar and an meh
+    # All arithmetic operators return meh when operating on an meh and a scalar
     for f in arithmetic_operators
-        @test ismissing(f(missing, missing))
-        @test ismissing(f(1, missing))
-        @test ismissing(f(missing, 1))
+        @test ismeh(f(meh, meh))
+        @test ismeh(f(1, meh))
+        @test ismeh(f(meh, 1))
     end
 
-    # All bit operators return missing when operating on two missing's
+    # All bit operators return meh when operating on two meh's
     for f in bit_operators
-        @test ismissing(f(missing, missing))
+        @test ismeh(f(meh, meh))
     end
 
-    @test ismissing(missing & true)
-    @test ismissing(true & missing)
-    @test !(missing & false)
-    @test !(false & missing)
-    @test ismissing(missing | false)
-    @test ismissing(false | missing)
-    @test missing | true
-    @test true | missing
-    @test ismissing(xor(missing, true))
-    @test ismissing(xor(true, missing))
-    @test ismissing(xor(missing, false))
-    @test ismissing(xor(false, missing))
+    @test ismeh(meh & true)
+    @test ismeh(true & meh)
+    @test !(meh & false)
+    @test !(false & meh)
+    @test ismeh(meh | false)
+    @test ismeh(false | meh)
+    @test meh | true
+    @test true | meh
+    @test ismeh(xor(meh, true))
+    @test ismeh(xor(true, meh))
+    @test ismeh(xor(meh, false))
+    @test ismeh(xor(false, meh))
 
-    @test ismissing(missing & 1)
-    @test ismissing(1 & missing)
-    @test ismissing(missing | 1)
-    @test ismissing(1 | missing)
-    @test ismissing(xor(missing, 1))
-    @test ismissing(xor(1, missing))
+    @test ismeh(meh & 1)
+    @test ismeh(1 & meh)
+    @test ismeh(meh | 1)
+    @test ismeh(1 | meh)
+    @test ismeh(xor(meh, 1))
+    @test ismeh(xor(1, meh))
 
-    @test ismissing("a" * missing)
-    @test ismissing(missing * "a")
+    @test ismeh("a" * meh)
+    @test ismeh(meh * "a")
 
-    @test sprint(show, missing) == "missing"
-    @test sprint(showcompact, missing) == "missing"
-    @test sprint(show, [missing]) == "$Missing[missing]"
-    @test sprint(show, [1 missing]) == "$(Union{Int, Missing})[1 missing]"
+    @test sprint(show, meh) == "meh"
+    @test sprint(showcompact, meh) == "meh"
+    @test sprint(show, [meh]) == "$Meh[meh]"
+    @test sprint(show, [1 meh]) == "$(Union{Int, Meh})[1 meh]"
     b = IOBuffer()
-    display(TextDisplay(b), [missing])
-    @test String(take!(b)) == "1-element Array{$Missing,1}:\n missing"
+    display(TextDisplay(b), [meh])
+    @test String(take!(b)) == "1-element Array{$Meh,1}:\n meh"
     b = IOBuffer()
-    display(TextDisplay(b), [1 missing])
-    @test String(take!(b)) == "1×2 Array{$(Union{Int, Missing}),2}:\n 1  missing"
+    display(TextDisplay(b), [1 meh])
+    @test String(take!(b)) == "1×2 Array{$(Union{Int, Meh}),2}:\n 1  meh"
 
-    x = Missings.replace([1, 2, missing, 4], 3)
+    x = Mehs.replace([1, 2, meh, 4], 3)
     @test eltype(x) === Int
     @test length(x) == 4
     @test size(x) == (4,)
     @test collect(x) == collect(1:4)
     @test collect(x) isa Vector{Int}
-    x = Missings.replace([1, 2, missing, 4], 3.0)
+    x = Mehs.replace([1, 2, meh, 4], 3.0)
     @test eltype(x) === Int
     @test length(x) == 4
     @test size(x) == (4,)
     @test collect(x) == collect(1:4)
     @test collect(x) isa Vector{Int}
-    x = Missings.replace([1 2; missing 4], 3)
+    x = Mehs.replace([1 2; meh 4], 3)
     @test eltype(x) === Int
     @test length(x) == 4
     @test size(x) == (2, 2)
     @test collect(x) == [1 2; 3 4]
     @test collect(x) isa Matrix{Int}
-    x = Missings.replace((v for v in [missing, 1, missing, 2, 4]), 0)
+    x = Mehs.replace((v for v in [meh, 1, meh, 2, 4]), 0)
     @test length(x) == 5
     @test size(x) == (5,)
     @test eltype(x) === Any
     @test collect(x) == [0, 1, 0, 2, 4]
     @test collect(x) isa Vector{Int}
 
-    x = Missings.fail([1, 2, 3, 4])
+    x = Mehs.fail([1, 2, 3, 4])
     @test eltype(x) === Int
     @test length(x) == 4
     @test size(x) == (4,)
     @test collect(x) == [1, 2, 3, 4]
     @test collect(x) isa Vector{Int}
-    x = Missings.fail([1 2; 3 4])
+    x = Mehs.fail([1 2; 3 4])
     @test eltype(x) === Int
     @test length(x) == 4
     @test size(x) == (2, 2)
     @test collect(x) == [1 2; 3 4]
     @test collect(x) isa Matrix{Int}
-    @test_throws MissingException collect(Missings.fail([1, 2, missing, 4]))
-    x = Missings.fail(v for v in [1, 2, 4])
+    @test_throws MehException collect(Mehs.fail([1, 2, meh, 4]))
+    x = Mehs.fail(v for v in [1, 2, 4])
     @test eltype(x) === Any
     @test length(x) == 3
     @test size(x) == (3,)
     @test collect(x) == [1, 2, 4]
     @test collect(x) isa Vector{Int}
 
-    x = Missings.skip([1, 2, missing, 4])
+    x = Mehs.skip([1, 2, meh, 4])
     @test eltype(x) === Int
     @test collect(x) == [1, 2, 4]
     @test collect(x) isa Vector{Int}
-    x = Missings.skip([1  2; missing 4])
+    x = Mehs.skip([1  2; meh 4])
     @test eltype(x) === Int
     @test collect(x) == [1, 2, 4]
     @test collect(x) isa Vector{Int}
-    x = collect(Missings.skip([missing]))
+    x = collect(Mehs.skip([meh]))
     @test eltype(x) === Union{}
     @test isempty(collect(x))
     @test collect(x) isa Vector{Union{}}
-    x = collect(Missings.skip(Union{Int, Missing}[]))
+    x = collect(Mehs.skip(Union{Int, Meh}[]))
     @test eltype(x) === Int
     @test isempty(collect(x))
     @test collect(x) isa Vector{Int}
-    x = Missings.skip([missing, missing, 1, 2, missing, 4, missing, missing])
+    x = Mehs.skip([meh, meh, 1, 2, meh, 4, meh, meh])
     @test eltype(x) === Int
     @test collect(x) == [1, 2, 4]
     @test collect(x) isa Vector{Int}
-    x = Missings.skip(v for v in [missing, 1, missing, 2, 4])
+    x = Mehs.skip(v for v in [meh, 1, meh, 2, 4])
     @test eltype(x) === Any
     @test collect(x) == [1, 2, 4]
     @test collect(x) isa Vector{Int}
 
-    @test Missings.coalesce(missing, 1) === 1
-    @test Missings.coalesce(1, missing) === 1
-    @test Missings.coalesce(missing, missing) === missing
-    @test Missings.coalesce.([missing, 1, missing], 0) == [0, 1, 0]
-    @test Missings.coalesce.([missing, 1, missing], 0) isa Vector{Int}
-    @test Missings.coalesce.([missing, 1, missing], [0, 10, 5]) == [0, 1, 5]
-    @test Missings.coalesce.([missing, 1, missing], [0, 10, 5]) isa Vector{Int}
-    @test isequal(Missings.coalesce.([missing, 1, missing], [0, missing, missing]), [0, 1, missing])
+    @test Mehs.coalesce(meh, 1) === 1
+    @test Mehs.coalesce(1, meh) === 1
+    @test Mehs.coalesce(meh, meh) === meh
+    @test Mehs.coalesce.([meh, 1, meh], 0) == [0, 1, 0]
+    @test Mehs.coalesce.([meh, 1, meh], 0) isa Vector{Int}
+    @test Mehs.coalesce.([meh, 1, meh], [0, 10, 5]) == [0, 1, 5]
+    @test Mehs.coalesce.([meh, 1, meh], [0, 10, 5]) isa Vector{Int}
+    @test isequal(Mehs.coalesce.([meh, 1, meh], [0, meh, meh]), [0, 1, meh])
     # Fails in Julia 0.6 and 0.7.0-DEV.1556
-    @test_broken Missings.coalesce.([missing, 1, missing], [0, missing, missing]) isa Vector{Union{Missing, Int}}
+    @test_broken Mehs.coalesce.([meh, 1, meh], [0, meh, meh]) isa Vector{Union{Meh, Int}}
 
-    @test levels(1:1) == levels([1]) == levels([1, missing]) == levels([missing, 1]) == [1]
-    @test levels(2:-1:1) == levels([2, 1]) == levels([2, missing, 1]) == [1, 2]
-    @test levels([missing, "a", "c", missing, "b"]) == ["a", "b", "c"]
-    @test levels([Complex(0, 1), Complex(1, 0), missing]) == [Complex(0, 1), Complex(1, 0)]
+    @test levels(1:1) == levels([1]) == levels([1, meh]) == levels([meh, 1]) == [1]
+    @test levels(2:-1:1) == levels([2, 1]) == levels([2, meh, 1]) == [1, 2]
+    @test levels([meh, "a", "c", meh, "b"]) == ["a", "b", "c"]
+    @test levels([Complex(0, 1), Complex(1, 0), meh]) == [Complex(0, 1), Complex(1, 0)]
     @test levels(sparse([0 3 2])) == [0, 2, 3]
-    @test typeof(levels([1])) === typeof(levels([1, missing])) === Vector{Int}
-    @test typeof(levels(["a"])) === typeof(levels(["a", missing])) === Vector{String}
+    @test typeof(levels([1])) === typeof(levels([1, meh])) === Vector{Int}
+    @test typeof(levels(["a"])) === typeof(levels(["a", meh])) === Vector{String}
     @test typeof(levels(sparse([1]))) === Vector{Int}
-    @test isempty(levels([missing]))
+    @test isempty(levels([meh]))
     @test isempty(levels([]))
 
-    x = convert(Vector{Union{Int, Missing}}, [1.0, missing])
-    @test isa(x, Vector{Union{Int, Missing}})
-    @test isequal(x, [1, missing])
-    x = convert(Vector{Union{Int, Missing}}, [1.0])
-    @test isa(x, Vector{Union{Int, Missing}})
+    x = convert(Vector{Union{Int, Meh}}, [1.0, meh])
+    @test isa(x, Vector{Union{Int, Meh}})
+    @test isequal(x, [1, meh])
+    x = convert(Vector{Union{Int, Meh}}, [1.0])
+    @test isa(x, Vector{Union{Int, Meh}})
     @test x == [1]
-    x = convert(Vector{Union{Int, Missing}}, [missing])
-    @test isa(x, Vector{Union{Int, Missing}})
-    @test isequal(x, [missing])
+    x = convert(Vector{Union{Int, Meh}}, [meh])
+    @test isa(x, Vector{Union{Int, Meh}})
+    @test isequal(x, [meh])
 
-    @test Missings.T(Union{Int, Missing}) == Int
-    @test Missings.T(Any) == Any
-    @test Missings.T(Missing) == Union{}
+    @test Mehs.T(Union{Int, Meh}) == Int
+    @test Mehs.T(Any) == Any
+    @test Mehs.T(Meh) == Union{}
 
-    @test isequal(missings(1), [missing])
-    @test isequal(missings(Int, 1), [missing])
-    @test missings(Int, 1) isa Vector{Union{Int, Missing}}
-    @test isequal(missings(Union{Int, Missing}, 1, 2), [missing missing])
-    @test missings(Union{Int, Missing}, 1, 2) isa Matrix{Union{Int, Missing}}
-    @test Union{Int, Missing}[1,2,3] == (Union{Int, Missing})[1,2,3]
+    @test isequal(mehs(1), [meh])
+    @test isequal(mehs(Int, 1), [meh])
+    @test mehs(Int, 1) isa Vector{Union{Int, Meh}}
+    @test isequal(mehs(Union{Int, Meh}, 1, 2), [meh meh])
+    @test mehs(Union{Int, Meh}, 1, 2) isa Matrix{Union{Int, Meh}}
+    @test Union{Int, Meh}[1,2,3] == (Union{Int, Meh})[1,2,3]
 
-    @test convert(Union{Int, Missing}, 1.0) == 1
+    @test convert(Union{Int, Meh}, 1.0) == 1
 
-    # AbstractArray{>:Missing}
+    # AbstractArray{>:Meh}
 
-    @test ismissing([1, missing] == [1, missing])
-    @test ismissing(["a", missing] == ["a", missing])
-    @test ismissing(Any[1, missing] == Any[1, missing])
-    @test ismissing(Any[missing] == Any[missing])
-    @test ismissing([missing] == [missing])
-    @test ismissing(Any[missing, 2] == Any[1, missing])
-    @test ismissing([missing, false] == BitArray([true, false]))
-    @test ismissing(Any[missing, false] == BitArray([true, false]))
-    @test Union{Int, Missing}[1] == Union{Float64, Missing}[1.0]
-    @test Union{Int, Missing}[1] == [1.0]
-    @test Union{Bool, Missing}[true] == BitArray([true])
-    @test !(Union{Int, Missing}[1] == [2])
-    @test !([1] == Union{Int, Missing}[2])
-    @test !(Union{Int, Missing}[1] == Union{Int, Missing}[2])
+    @test ismeh([1, meh] == [1, meh])
+    @test ismeh(["a", meh] == ["a", meh])
+    @test ismeh(Any[1, meh] == Any[1, meh])
+    @test ismeh(Any[meh] == Any[meh])
+    @test ismeh([meh] == [meh])
+    @test ismeh(Any[meh, 2] == Any[1, meh])
+    @test ismeh([meh, false] == BitArray([true, false]))
+    @test ismeh(Any[meh, false] == BitArray([true, false]))
+    @test Union{Int, Meh}[1] == Union{Float64, Meh}[1.0]
+    @test Union{Int, Meh}[1] == [1.0]
+    @test Union{Bool, Meh}[true] == BitArray([true])
+    @test !(Union{Int, Meh}[1] == [2])
+    @test !([1] == Union{Int, Meh}[2])
+    @test !(Union{Int, Meh}[1] == Union{Int, Meh}[2])
 
-    @test ismissing([1, missing] != [1, missing])
-    @test ismissing(["a", missing] != ["a", missing])
-    @test ismissing(Any[1, missing] != Any[1, missing])
-    @test ismissing(Any[missing] != Any[missing])
-    @test ismissing([missing] != [missing])
-    @test ismissing(Any[missing, 2] != Any[1, missing])
-    @test ismissing([missing, false] != BitArray([true, false]))
-    @test ismissing(Any[missing, false] != BitArray([true, false]))
-    @test !(Union{Int, Missing}[1] != Union{Float64, Missing}[1.0])
-    @test !(Union{Int, Missing}[1] != [1.0])
-    @test !(Union{Bool, Missing}[true] != BitArray([true]))
-    @test Union{Int, Missing}[1] != [2]
-    @test [1] != Union{Int, Missing}[2]
-    @test Union{Int, Missing}[1] != Union{Int, Missing}[2]
+    @test ismeh([1, meh] != [1, meh])
+    @test ismeh(["a", meh] != ["a", meh])
+    @test ismeh(Any[1, meh] != Any[1, meh])
+    @test ismeh(Any[meh] != Any[meh])
+    @test ismeh([meh] != [meh])
+    @test ismeh(Any[meh, 2] != Any[1, meh])
+    @test ismeh([meh, false] != BitArray([true, false]))
+    @test ismeh(Any[meh, false] != BitArray([true, false]))
+    @test !(Union{Int, Meh}[1] != Union{Float64, Meh}[1.0])
+    @test !(Union{Int, Meh}[1] != [1.0])
+    @test !(Union{Bool, Meh}[true] != BitArray([true]))
+    @test Union{Int, Meh}[1] != [2]
+    @test [1] != Union{Int, Meh}[2]
+    @test Union{Int, Meh}[1] != Union{Int, Meh}[2]
 
-    @test any([true, missing])
-    @test any(x -> x == 1, [1, missing])
-    @test ismissing(any([false, missing]))
-    @test ismissing(any(x -> x == 1, [2, missing]))
-    @test ismissing(all([true, missing]))
-    @test ismissing(all(x -> x == 1, [1, missing]))
-    @test !all([false, missing])
-    @test !all(x -> x == 1, [2, missing])
-    @test 1 in [1, missing]
-    @test ismissing(2 in [1, missing])
-    @test ismissing(missing in [1, missing])
+    @test any([true, meh])
+    @test any(x -> x == 1, [1, meh])
+    @test ismeh(any([false, meh]))
+    @test ismeh(any(x -> x == 1, [2, meh]))
+    @test ismeh(all([true, meh]))
+    @test ismeh(all(x -> x == 1, [1, meh]))
+    @test !all([false, meh])
+    @test !all(x -> x == 1, [2, meh])
+    @test 1 in [1, meh]
+    @test ismeh(2 in [1, meh])
+    @test ismeh(meh in [1, meh])
 
-    @test isequal(float([1, missing]), [1, missing])
-    @test float([1, missing]) isa Vector{Union{Float64, Missing}}
-    @test isequal(float(Union{Int, Missing}[missing]), [missing])
-    @test float(Union{Int, Missing}[missing]) isa Vector{Union{Float64, Missing}}
-    @test float(Union{Int, Missing}[1]) == [1]
-    @test float(Union{Int, Missing}[1]) isa Vector{Union{Float64, Missing}}
-    @test isequal(float([missing]), [missing])
-    @test float([missing]) isa Vector{Missing}
+    @test isequal(float([1, meh]), [1, meh])
+    @test float([1, meh]) isa Vector{Union{Float64, Meh}}
+    @test isequal(float(Union{Int, Meh}[meh]), [meh])
+    @test float(Union{Int, Meh}[meh]) isa Vector{Union{Float64, Meh}}
+    @test float(Union{Int, Meh}[1]) == [1]
+    @test float(Union{Int, Meh}[1]) isa Vector{Union{Float64, Meh}}
+    @test isequal(float([meh]), [meh])
+    @test float([meh]) isa Vector{Meh}
 
-    # MissingException
-    @test sprint(showerror, MissingException("test")) == "MissingException: test"
+    # MehException
+    @test sprint(showerror, MehException("test")) == "MehException: test"
 end
